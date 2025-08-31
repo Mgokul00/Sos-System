@@ -19,7 +19,7 @@ class EmergencyDetectionSystem:
         self.fall_confidence = 0.76
         
         # Google Gemini API
-        self.google_api_key = "AIzaSyBMRUrfEMP8MqvnX1zgPeOeHDHVSCFJTW4"
+        self.google_api_key = ""
         self.gemini_model = "gemini-2.0-flash-exp"
         
         # System settings
@@ -165,3 +165,4 @@ class EmergencyDetectionSystem:
         print(f"ANALYSIS: {gemini_analysis}")
         
         return emergency_report
+
