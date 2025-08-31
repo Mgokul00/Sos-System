@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Detection System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header-card">
+            <div class="header-content">
+                <h1><i class="fas fa-shield-alt"></i> Emergency Detection System</h1>
+                <div class="status-indicator">
+                    <span id="status-text">System Ready</span>
+                    <div id="status-dot" class="status-dot ready"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Video Source Card -->
+            <div class="card source-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-video"></i> Video Source</h3>
+                </div>
+                <div class="card-body">
+                    <div class="source-options">
+                        <div class="source-option">
+                            <div class="source-type">
+                                <input type="radio" id="file-source" name="source" value="file" checked>
+                                <label for="file-source">
+                                    <i class="fas fa-file-video"></i>
+                                    Upload Video File
+                                </label>
+                            </div>
+                            <div class="file-upload" id="file-upload-section">
+                                <input type="file" id="video-file" accept="video/*">
+                                <label for="video-file" class="upload-btn">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    Choose Video File
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="source-option">
+                            <div class="source-type">
+                                <input type="radio" id="rtsp-source" name="source" value="rtsp">
+                                <label for="rtsp-source">
+                                    <i class="fas fa-camera"></i>
+                                    CCTV/RTSP Stream
+                                </label>
+                            </div>
+                            <div class="rtsp-input" id="rtsp-input-section" style="display: none;">
+                                <input type="text" id="rtsp-url" placeholder="rtsp://username:password@ip:port/stream">
+                                <button id="test-rtsp" class="btn btn-secondary">
+                                    <i class="fas fa-wifi"></i> Test Connection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="control-buttons">
+                        <button id="start-monitoring" class="btn btn-primary" disabled>
+                            <i class="fas fa-play"></i> Start Monitoring
+                        </button>
+                        <button id="stop-monitoring" class="btn btn-danger" disabled>
+                            <i class="fas fa-stop"></i> Stop Monitoring
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Video Display and Alerts Row -->
+            <div class="detection-row">
+                <!-- Video Display Card -->
+                <div class="card video-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-eye"></i> Live Detection</h3>
+                        <div class="detection-stats">
+                            <span id="frame-count">Frame: 0</span>
+                            <span id="detection-count">Detections: 0</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="video-container">
+                            <img id="video-stream" src="" alt="Video Stream">
+                            <div class="video-overlay" id="video-overlay">
+                                <div class="overlay-message">
+                                    <i class="fas fa-video-slash"></i>
+                                    <p>No video source selected</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Emergency Alerts Card -->
+                <div class="card alerts-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-exclamation-triangle"></i> Emergency Alerts</h3>
+                        <div class="alert-stats">
+                            <span id="total-alerts">Total: 0</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div id="alerts-container" class="alerts-container">
+                            <div class="no-alerts">
+                                <i class="fas fa-shield-alt"></i>
+                                <p>No emergency alerts</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Detection Configuration Card -->
+            <div class="card config-card">
+                <div class="card-header">
+                    <h3><i class="fas fa-cog"></i> Detection Settings</h3>
+                </div>
+                <div class="card-body">
+                    <div class="config-grid">
+                        <div class="config-item">
+                            <label>Severe Threshold</label>
+                            <div class="threshold-control">
+                                <input type="range" id="severe-threshold" min="0.1" max="1.0" step="0.05" value="0.70">
+                                <span id="severe-value">70%</span>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <label>Moderate Threshold</label>
+                            <div class="threshold-control">
+                                <input type="range" id="moderate-threshold" min="0.1" max="1.0" step="0.05" value="0.70">
+                                <span id="moderate-value">70%</span>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <label>Fall Threshold</label>
+                            <div class="threshold-control">
+                                <input type="range" id="fall-threshold" min="0.1" max="1.0" step="0.05" value="0.77">
+                                <span id="fall-value">77%</span>
+                            </div>
+                        </div>
+                        <div class="config-item">
+                            <label>Alert Cooldown</label>
+                            <div class="threshold-control">
+                                <input type="range" id="alert-cooldown" min="1" max="30" step="1" value="5">
+                                <span id="cooldown-value">5s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div id="alert-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Emergency Alert</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
